@@ -87,7 +87,11 @@ const SearchMovie = () => {
             />
 
             {
-                <div className={`fixed top-0 left-0 w-full h-screen bg-secondary/70 overflow-y-auto z-[99] p-6 delay ${isOpenSearchBar ? 'visible opacity-100' : 'invisible opacity-0'}`}>
+                <div
+                    className={`fixed top-0 left-0 w-full h-screen bg-secondary/90 backdrop-blur-sm overflow-y-auto z-[99] p-6 delay ${
+                        isOpenSearchBar ? 'visible opacity-100' : 'invisible opacity-0'
+                    }`}
+                >
                     <button
                         className='mx-3 absolute top-3 right-3 text-4xl hover:text-brand active:scale-95'
                         onClick={() => {

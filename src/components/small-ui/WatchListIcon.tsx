@@ -17,7 +17,7 @@ const WatchListIcon = () => {
                 className='text-color'
             >
                 <Badge badgeContent={watchlist.length} invisible={watchlist.length === 0} color='primary'>
-                    <RxBookmarkFilled className={`text-2xl `} />
+                    <RxBookmarkFilled className={`text-2xl text-color`} />
                 </Badge>
             </IconButton>
         </Tooltip>
