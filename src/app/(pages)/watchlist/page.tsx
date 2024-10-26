@@ -34,7 +34,7 @@ const Watchlist: React.FC = () => {
             {watchlist.length > 0 ? (
                 <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mx-4 md:mx-16 lg:mx-32'>
                     {watchlist.map((movie: Movie) => (
-                        <OnClickLink href={`/movie/${movie.id}`} key={movie.id} className='relative p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden'>
+                        <OnClickLink href={`/movies/${movie.id}`} key={movie.id} className='relative p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden'>
                             <div>
                                 <img src={getPosterUrl(movie.poster_path)} alt={movie.title} className='w-full h-60 object-cover rounded-md hover:opacity-90 transition-opacity' />
                             </div>
