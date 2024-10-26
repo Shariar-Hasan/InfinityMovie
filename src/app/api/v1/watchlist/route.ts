@@ -2,6 +2,9 @@ import path from 'path';
 import fs from 'fs';
 import { Movie } from '@/types/Movie';
 const watchlistFilePath = path.join(__dirname, 'watchlist.txt');
+console.log({
+    watchlistFilePath,
+});
 
 // helpers
 const readWatchlistFile = () => {
