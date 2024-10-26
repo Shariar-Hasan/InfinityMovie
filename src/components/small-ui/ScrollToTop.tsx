@@ -14,11 +14,13 @@ const ScrollToTop: React.FC = () => {
     };
 
     return (
-        isExceed && (
-            <button onClick={scrollToTop} className='fixed bottom-8 right-8 p-3 rounded-full bg-brand opacity-40 text-white shadow-lg hover:opacity-100 transition-all' aria-label='Scroll to top'>
-                <MdArrowUpward className='text-lg' />
-            </button>
-        )
+        <button
+            onClick={scrollToTop}
+            className={`fixed bottom-8 right-8 p-3 ${isExceed ? 'translate-x-0 scale-100' : 'translate-x-20 scale-0'} rounded-full bg-brand opacity-40 text-white shadow-lg hover:opacity-100 delay`}
+            aria-label='Scroll to top'
+        >
+            <MdArrowUpward className='text-lg' />
+        </button>
     );
 };
 
