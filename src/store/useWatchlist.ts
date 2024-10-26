@@ -1,4 +1,4 @@
-import { getWatchlist } from '@/lib/watchlistActions';
+import { getWatchlist } from '@/lib/watchlistToLocalstorage';
 import { Movie } from '@/types/Movie';
 import { create } from 'zustand';
 
@@ -14,10 +14,11 @@ export const useWatchlist = create<WatchState>((set) => ({
 
     // Fetch and set the watchlist data
     fetchWatchlist: async () => {
-        const data = await getWatchlist();
-        console.log('use watchlist store', data);
-        if (!data.success) return set({ watchlist: [] });
-        return set({ watchlist: data.data });
+        // const data = await getWatchlist();
+        const data = getWatchlist();
+        // console.log('use watchlist store', data);
+        // if (!data.success) return set({ watchlist: [] });
+        return set({ watchlist: data });
     },
 
     // Add a movie to the watchlist and update the backend

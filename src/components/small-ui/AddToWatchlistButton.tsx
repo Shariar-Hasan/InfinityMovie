@@ -1,5 +1,6 @@
 'use client';
-import { addToWatchlist, removeFromWatchlist } from '@/lib/watchlistActions';
+import { addToWatchlist, removeFromWatchlist } from '@/lib/watchlistToLocalstorage';
+// import { addToWatchlist, removeFromWatchlist } from '@/lib/watchlistActions';
 import { useWatchlist } from '@/store/useWatchlist';
 import { Movie } from '@/types/Movie';
 import { IconButton, Tooltip } from '@mui/material';
@@ -13,13 +14,14 @@ const AddToWatchlistButton = ({ movie }: { movie: Movie }) => {
     const handleAddToWatchlist = async () => {
         addToWatch(movie);
         try {
-            const res = await addToWatchlist(movie);
-            if (res.success) {
-                toast.success('Added to watchlist');
-            } else {
-                toast.error('Failed to add to watchlist');
-                removeFromWatch(movie.id);
-            }
+            addToWatchlist(movie);
+            toast.success('Added to watchlist');
+            // if (res.success) {
+            //     toast.success('Added to watchlist');
+            // } else {
+            //     toast.error('Failed to add to watchlist');
+            //     removeFromWatch(movie.id);
+            // }
         } catch (error) {
             toast.error('Failed to add to watchlist');
             removeFromWatch(movie.id);
@@ -27,14 +29,16 @@ const AddToWatchlistButton = ({ movie }: { movie: Movie }) => {
     };
     const handleRemoveFromWatchlist = async () => {
         try {
-            const res = await removeFromWatchlist(movie.id);
-            if (res.success) {
-                toast.success('Removed from watchlist');
-                removeFromWatch(movie.id);
-            } else {
-                toast.error('Failed to remove from watchlist');
-                addToWatch(movie);
-            }
+            removeFromWatchlist(movie.id);
+            toast.success('Removed from watchlist');
+            removeFromWatch(movie.id);
+            // if (res.success) {
+            //     toast.success('Removed from watchlist');
+            //     removeFromWatch(movie.id);
+            // } else {
+            //     toast.error('Failed to remove from watchlist');
+            //     addToWatch(movie);
+            // }
         } catch (error) {
             toast.error('Failed to remove from watchlist');
             removeFromWatch(movie.id);
