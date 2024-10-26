@@ -6,10 +6,11 @@ export interface Movie {
     release_date: string;
     backdrop_path: string;
     poster_path: string;
-    genres: {
+    genres?: {
         id: number;
         name: string;
     }[];
+    genre_ids?: number[];
     original_language: string;
     popularity: number;
     vote_average: number;

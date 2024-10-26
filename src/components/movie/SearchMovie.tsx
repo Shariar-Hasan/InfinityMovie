@@ -1,18 +1,18 @@
 'use client';
 import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { TextField, CircularProgress, Box, List, ListItem, ListItemText } from '@mui/material';
+import { TextField, Box } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
 import { fetchMovieSearch } from '@/lib/getMovies';
 import { Movie } from '@/types/Movie';
-import { FaTimes } from 'react-icons/fa';
 import { getPosterUrl } from '@/lib/getUrl';
 import { LiaTimesSolid } from 'react-icons/lia';
 import Image from 'next/image';
 import Link from 'next/link';
+import { isBrowser } from '@/constants/browser';
 
 const SearchMovie = () => {
     const inputRef = useRef<HTMLInputElement | null>(null);
-    const { control, watch } = useForm({ defaultValues: { search: '' } });
+    const { control, watch, setValue } = useForm({ defaultValues: { search: '' } });
     const [loading, setLoading] = useState(false);
     const [deboucedSearch, setDebouncedSearch] = useState<string>('');
     const [isOpenSearchBar, setIsOpenSearchBar] = useState(false);
@@ -20,18 +20,32 @@ const SearchMovie = () => {
 
     const searchQuery = watch('search');
 
+    const toggleSearchBar = useCallback(
+        (value: boolean) => {
+            if (isBrowser) {
+                if (value) {
+                    console.log({ value });
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    document.body.style.overflow = 'auto';
+                }
+            }
+            setIsOpenSearchBar(value);
+        },
+        [isOpenSearchBar]
+    );
+
     useEffect(() => {
         if (isOpenSearchBar && inputRef.current) {
-            console.log(inputRef.current, 'firstRender');
             inputRef.current.focus();
         }
     }, [isOpenSearchBar]);
 
     useEffect(() => {
         const tid = setTimeout(() => {
-            setDebouncedSearch(searchQuery);
+            // setDebouncedSearch(searchQuery);
+            fetchMovies();
         }, 700);
-        console.log('searching by query', searchQuery);
         return () => clearTimeout(tid);
     }, [searchQuery]);
 
@@ -44,11 +58,10 @@ const SearchMovie = () => {
     const fetchMovies = async () => {
         setLoading(true);
         try {
-            const newSearchedMovies = await fetchMovieSearch(deboucedSearch);
-            console.log(newSearchedMovies, 'newSearchedMovies');
+            // const newSearchedMovies = await fetchMovieSearch(deboucedSearch);
+            const newSearchedMovies = await fetchMovieSearch(searchQuery);
             if (!newSearchedMovies) {
                 setMovies([]);
-                throw new Error('Error fetching movies');
             } else {
                 setMovies(newSearchedMovies.results);
             }
@@ -62,14 +75,30 @@ const SearchMovie = () => {
 
     return (
         <Box position='relative' display='flex' flexDirection='column' alignItems='center'>
-            <TextField label='Search Movies' placeholder='Search a movie 🔎' color='primary' variant='outlined' fullWidth sx={{ maxWidth: 500 }} onFocus={() => setIsOpenSearchBar(true)} />
+            <TextField
+                label='Search Movies'
+                placeholder='Search a movie 🔎'
+                color='primary'
+                variant='outlined'
+                fullWidth
+                sx={{ maxWidth: 500 }}
+                onFocus={() => toggleSearchBar(true)}
+                className='placeholder:text-color/45'
+            />
 
-            {/* Loading indicator */}
-            {loading && <CircularProgress size={24} sx={{ position: 'absolute', top: '50%', right: '20px' }} />}
-
-            {/* Results dropdown */}
             {
-                <div className={`fixed top-0 left-0 w-full h-screen bg-secondary overflow-y-auto z-[99] p-6 delay ${isOpenSearchBar ? 'visible opacity-100' : 'invisible opacity-0'}`}>
+                <div className={`fixed top-0 left-0 w-full h-screen bg-secondary/70 overflow-y-auto z-[99] p-6 delay ${isOpenSearchBar ? 'visible opacity-100' : 'invisible opacity-0'}`}>
+                    <button
+                        className='mx-3 absolute top-3 right-3 text-4xl hover:text-brand active:scale-95'
+                        onClick={() => {
+                            toggleSearchBar(false);
+                            setMovies([]);
+                            setDebouncedSearch('');
+                            setValue('search', '');
+                        }}
+                    >
+                        <LiaTimesSolid className='' />
+                    </button>
                     <div className='flex items-center justify-center'>
                         <Controller
                             name='search'
@@ -81,7 +110,6 @@ const SearchMovie = () => {
                                     placeholder='Search a movie 🔎'
                                     color='primary'
                                     variant='outlined'
-                                    focused
                                     fullWidth
                                     inputRef={inputRef}
                                     sx={{ maxWidth: 500 }}
@@ -89,15 +117,6 @@ const SearchMovie = () => {
                                 />
                             )}
                         />
-                        <button
-                            className='mx-3'
-                            onClick={() => {
-                                setIsOpenSearchBar(false);
-                                setMovies([]);
-                            }}
-                        >
-                            <LiaTimesSolid className='text-2xl' />
-                        </button>
                     </div>
                     <div className='grid lg:grid-cols-8 md:col-span-5 sm:col-span-3 col-span-1'>
                         {movies && movies.length > 0 ? (
@@ -110,7 +129,14 @@ const SearchMovie = () => {
                                 </Link>
                             ))
                         ) : deboucedSearch.length > 3 ? (
-                            <div className='text-center py-5 col-span-12'>No movies found</div>
+                            loading ? (
+                                <div className='text-center py-5 col-span-12'>
+                                    <span className='w-10 h-10 animate-bounce delay-100 bg-brand rounded-full'></span>
+                                    <span className='w-10 h-10 animate-bounce  bg-brand rounded-full'></span>
+                                </div>
+                            ) : (
+                                <div className='text-center py-5 col-span-12'>No movies found</div>
+                            )
                         ) : (
                             <div className='text-center py-5 col-span-12'>Search your movie</div>
                         )}

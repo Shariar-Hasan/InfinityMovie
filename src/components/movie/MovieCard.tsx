@@ -1,12 +1,13 @@
-import { getBackdropUrl, getPosterUrl } from '@/lib/getUrl';
+import { getBackdropUrl } from '@/lib/getUrl';
 import { Movie } from '@/types/Movie';
 import Image from 'next/image';
-import Link from 'next/link';
 import React from 'react';
+import AddToWatchlistButton from '../small-ui/AddToWatchlistButton';
+import OnClickLink from '../small-ui/OnClickLink';
 
 const MovieCard = ({ movie }: { movie: Movie }) => {
     return (
-        <Link href={`/movies/${movie.id}`}>
+        <OnClickLink href={`/movies/${movie.id}`}>
             <div className='relative flex flex-col rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 group h-96'>
                 <div className='relative h-full overflow-hidden group-hover:opacity-30 duration-300 bg-black'>
                     <Image
@@ -29,10 +30,13 @@ const MovieCard = ({ movie }: { movie: Movie }) => {
                         </p>
 
                         <p className='mt-4 text-sm text-gray-600 dark:text-gray-300 line-clamp-3'>{movie.overview}</p>
+                        <div className='flex justify-end items-center'>
+                            <AddToWatchlistButton movie={movie} />
+                        </div>
                     </div>
                 </div>
             </div>
-        </Link>
+        </OnClickLink>
     );
 };
 

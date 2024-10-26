@@ -1,5 +1,4 @@
 'use client';
-import { Metadata } from 'next';
 import React from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
@@ -8,11 +7,6 @@ import MovieCard from '@/components/movie/MovieCard';
 import useInView from '@/hooks/useInView';
 import { Skeleton } from '@mui/material';
 import SearchMovie from '@/components/movie/SearchMovie';
-// export const metadata: Metadata = {
-//     title: 'Moveis',
-//     description:
-//         'Infinity Movie is a movie app that allows you to search for movies and view details about them. It is built with Next.js and Tailwind CSS. It is a great example of a modern web application. ',
-// };
 
 const MoviePage = () => {
     const { fetchNextPage, hasNextPage, isFetchingNextPage, data, isFetching } = useInfiniteQuery({
@@ -33,6 +27,9 @@ const MoviePage = () => {
             fetchNextPage();
         }
     }, [inView, fetchNextPage]);
+    useEffect(() => {
+        console.log({ data });
+    }, [data]);
 
     return (
         <div className='container mx-auto p-4'>
@@ -49,7 +46,7 @@ const MoviePage = () => {
                         </React.Fragment>
                     ))}
                 {Array.from({
-                    length: 10,
+                    length: 5,
                 }).map((_, i) => (
                     <Skeleton key={i} ref={i === 0 ? interSectionRef : undefined} variant='rounded' width='100%' height='400px' className='bg-primary brightness-125' />
                 ))}

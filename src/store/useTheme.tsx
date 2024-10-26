@@ -1,4 +1,3 @@
-// store/useThemeStore.ts
 import { isBrowser } from '@/constants/browser';
 import { ThemeType } from '@/types/Theme';
 import { create } from 'zustand';

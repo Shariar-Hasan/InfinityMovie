@@ -1,43 +1,69 @@
+'use client';
 import React from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { getPosterUrl } from '@/lib/getUrl';
 import { Movie } from '@/types/Movie';
+import Link from 'next/link';
+import { AiOutlineDelete } from 'react-icons/ai';
+import { useWatchlist } from '@/store/useWatchlist';
+import { toast } from 'react-toastify';
+import { removeFromWatchlist } from '@/lib/watchlistActions';
+import { getPosterUrl } from '@/lib/getUrl';
+import { ButtonLink } from '@/components/small-ui/Button';
 
-interface WatchlistProps {
-    movies: Movie[];
-}
-
-const Watchlist: React.FC<WatchlistProps> = ({ movies }) => {
+const Watchlist: React.FC = () => {
+    const { watchlist, removeFromWatch, addToWatch } = useWatchlist();
+    const handleRemoveFromWatchlist = async (movie: Movie) => {
+        try {
+            removeFromWatch(movie.id);
+            const res = await removeFromWatchlist(movie.id);
+            if (res.success) {
+                toast.success('Removed from watchlist');
+            } else {
+                toast.error('Failed to remove from watchlist');
+                addToWatch(movie);
+            }
+        } catch (error) {
+            toast.error('Failed to remove from watchlist');
+            addToWatch(movie);
+        }
+    };
     return (
-        <div className='p-6 bg-gray-900 min-h-screen text-white'>
-            <h1 className='text-3xl font-bold mb-8'>My Watchlist</h1>
+        <div className='min-h-screen py-10 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100'>
+            <h1 className='text-4xl font-semibold text-center mb-10'>My Watchlist</h1>
 
-            {/* Filter and Sort Options */}
-            <div className='flex items-center justify-between mb-6'>
-                <div>
-                    <button className='px-4 py-2 mr-2 bg-primary  rounded-md'>All</button>
-                    <button className='px-4 py-2 mr-2 bg-secondary  rounded-md'>By Rating</button>
-                    <button className='px-4 py-2 bg-brand  rounded-md'>By Release Date</button>
-                </div>
-            </div>
+            {watchlist.length > 0 ? (
+                <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mx-4 md:mx-16 lg:mx-32'>
+                    {watchlist.map((movie: Movie) => (
+                        <div key={movie.id} className='relative p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden'>
+                            <Link href={`/movie/${movie.id}`}>
+                                <img src={getPosterUrl(movie.poster_path)} alt={movie.title} className='w-full h-60 object-cover rounded-md hover:opacity-90 transition-opacity' />
+                            </Link>
 
-            {/* Movies Grid */}
-            <div className='grid gap-6 sm:grid-cols-2 lg:grid-cols-4'>
-                {movies.map((movie) => (
-                    <div key={movie.id} className='relative p-4 rounded-lg shadow-lg transition-transform transform hover:scale-105'>
-                        <Link href={`/movies/${movie.id}`} passHref>
-                            <div className='cursor-pointer'>
-                                <Image src={movie.poster_path ? getPosterUrl(movie.poster_path) : '/placeholder.jpg'} alt={movie.title} width={300} height={450} className='rounded-lg' />
-                                <h2 className='mt-4 text-lg font-semibold'>{movie.title}</h2>
-                                <p className='text-sm text-gray-400'>{new Date(movie.release_date).toLocaleDateString()}</p>
-                                <p className=' mt-2'>Rating: {movie.vote_average}</p>
-                                <p className='text-sm mt-2  line-clamp-3'>{movie.overview}</p>
+                            <div className='mt-4'>
+                                <Link href={`/movie/${movie.id}`}>
+                                    <h2 className='text-lg font-bold hover:underline'>{movie.title}</h2>
+                                </Link>
+                                <p className='text-sm text-gray-600 dark:text-gray-300 mt-1'>{movie.release_date}</p>
+                                <p className='mt-2 text-sm line-clamp-3'>{movie.overview}</p>
                             </div>
-                        </Link>
-                    </div>
-                ))}
-            </div>
+
+                            <button
+                                onClick={() => handleRemoveFromWatchlist(movie)}
+                                className='absolute top-4 right-4 text-red-500 hover:text-red-700 transition-colors'
+                                aria-label='Remove from watchlist'
+                            >
+                                <AiOutlineDelete size={24} />
+                            </button>
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <div className='flex flex-col justify-center items-center'>
+                    <p className='text-center text-xl mt-20'>Your watchlist is empty.</p>
+                    <ButtonLink href='/movies' varient='brand' className='rounded-sm'>
+                        Discover Movies
+                    </ButtonLink>
+                </div>
+            )}
         </div>
     );
 };

@@ -10,34 +10,50 @@ import Image from 'next/image';
 import CastCard from '@/components/movie/CastCard';
 import { Metadata, ResolvingMetadata } from 'next';
 interface MovieDetailsPageProps {
-    params: { id: string };
+    params: { id: Promise<{ id: string }> };
 }
-export async function generateMetadata({ params }: MovieDetailsPageProps, parent: ResolvingMetadata): Promise<Metadata> {
-    const id = (await params).id;
+type Params = Promise<{ id: string }>;
 
-    const movie: Movie = await fetchMovieDetails(+id);
+export async function generateMetadata(props: { params: Params }, parent: ResolvingMetadata): Promise<Metadata> {
+    try {
+        const { id } = await props.params;
 
-    // optionally access and extend (rather than replace) parent metadata
-    const previousImages = (await parent).openGraph?.images || [];
+        const movie: Movie = await fetchMovieDetails(+id);
 
-    return {
-        title: movie.title,
-        openGraph: {
-            images: [getPosterUrl(movie.poster_path), getBackdropUrl(movie.backdrop_path), ...previousImages],
-        },
-        description: movie.overview,
-        keywords: ['movie', 'film', 'cinema', 'popular', 'trending', 'cast', 'recommendations', 'genres'],
-    };
+        // optionally access and extend (rather than replace) parent metadata
+        const previousImages = (await parent).openGraph?.images || [];
+
+        return {
+            title: movie.title,
+            openGraph: {
+                images: [getPosterUrl(movie.poster_path), getBackdropUrl(movie.backdrop_path), ...previousImages],
+            },
+            description: movie.overview,
+            keywords: ['movie', 'film', 'cinema', 'popular', 'trending', 'cast', 'recommendations', 'genres'],
+        };
+    } catch (error) {
+        console.error(error);
+        return {
+            title: 'Movie Details',
+            description: 'This is the movie details page',
+            keywords: ['movie', 'film', 'cinema', 'popular', 'trending', 'cast', 'recommendations', 'genres'],
+        };
+    }
 }
 export async function generateStaticParams() {
-    const moveis = await fetchPopularMovies(1);
+    try {
+        const moveis = await fetchPopularMovies(1);
 
-    return await moveis.results.map((movie: Movie) => ({
-        id: movie.id.toString(),
-    }));
+        return await moveis.results.map((movie: Movie) => ({
+            id: movie.id.toString(),
+        }));
+    } catch (error) {
+        console.error(error);
+        return [];
+    }
 }
-const MovieDetailsPage = async ({ params }: MovieDetailsPageProps) => {
-    const { id } = await params;
+const MovieDetailsPage = async (props: { params: Params }) => {
+    const id = (await props.params).id;
 
     const movie: Movie = await fetchMovieDetails(+id);
     const {
@@ -87,8 +103,8 @@ const MovieDetailsPage = async ({ params }: MovieDetailsPageProps) => {
                                         </p>
                                         <p className='text-lg flex items-center flex-wrap gap-2'>
                                             <span className='font-semibold'>Genres:</span>{' '}
-                                            {movie.genres.map(({ name }: { name: string }) => (
-                                                <Chip>{name}</Chip>
+                                            {movie.genres?.map(({ name }: { name: string }) => (
+                                                <Chip key={name}>{name}</Chip>
                                             ))}
                                         </p>
                                         <p className='text-lg'>

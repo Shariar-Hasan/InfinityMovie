@@ -1,3 +1,19 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"]
+  "extends": ["next/core-web-vitals", "next/typescript"],
+  "rules": {
+    "no-console": "warn",
+    "no-unused-vars": "warn",
+    "no-undef": "warn",
+    "no-unreachable": "warn",
+    "no-constant-condition": "warn",
+    "no-empty": "warn",
+    "no-irregular-whitespace": "warn",
+    "no-regex-spaces": "warn",
+    "no-sparse-arrays": "warn",
+    "no-unexpected-multiline": "warn",
+    "no-unsafe-negation": "warn",
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/no-unused-vars": "warn"
+
+  }
 }

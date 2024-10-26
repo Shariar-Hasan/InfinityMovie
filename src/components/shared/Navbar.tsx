@@ -10,6 +10,7 @@ import useScrollSpy from '@/hooks/useScrollSpy';
 import Sidebar from './Sidebar';
 import Frame from './Frame';
 import { navLinks } from '@/constants/routes';
+import WatchListIcon from '../small-ui/WatchListIcon';
 const Navbar = () => {
     const { theme, setTheme } = useTheme();
     const isExceed = useScrollSpy(200);
@@ -38,6 +39,7 @@ const Navbar = () => {
                         ))}
                     </div>
                     <div className='flex items-center'>
+                        <WatchListIcon />
                         <button className='rounded-full px-3 py-2 text-xl' onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
                             {modeIcon[theme]}
                         </button>
