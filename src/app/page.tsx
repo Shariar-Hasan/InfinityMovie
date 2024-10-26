@@ -14,7 +14,7 @@ export default function Home() {
                 <div className='grid grid-cols-1 gap-8 justify-items-center'>
                     <h1 className='text-4xl font-bold text-center'>Welcome to Infinity Movie</h1>
                     <p className='text-lg text-center'>A place where you can find all the information about your favorite movies.</p>
-                    <ButtonLink href='/movies' varient='brand'>
+                    <ButtonLink href='/movies' varient='brand' className='text-white'>
                         Explore Movies
                     </ButtonLink>
                 </div>

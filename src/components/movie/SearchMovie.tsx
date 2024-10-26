@@ -74,17 +74,19 @@ const SearchMovie = () => {
     };
 
     return (
-        <Box position='relative' display='flex' flexDirection='column' alignItems='center'>
-            <TextField
-                label='Search Movies'
-                placeholder='Search a movie 🔎'
-                color='primary'
-                variant='outlined'
-                fullWidth
-                sx={{ maxWidth: 500 }}
-                onFocus={() => toggleSearchBar(true)}
-                className='placeholder:text-color/45'
-            />
+        <Box position='relative' display='flex' gap={10} flexDirection='column' alignItems='center'>
+            <div className='px-2 w-full'>
+                <TextField
+                    label='Search Movies'
+                    placeholder='Search a movie 🔎'
+                    color='primary'
+                    variant='outlined'
+                    fullWidth
+                    sx={{ maxWidth: 500 }}
+                    onFocus={() => toggleSearchBar(true)}
+                    className='placeholder:text-color/45 w-full'
+                />
+            </div>
 
             {
                 <div
@@ -103,7 +105,7 @@ const SearchMovie = () => {
                     >
                         <LiaTimesSolid className='' />
                     </button>
-                    <div className='flex items-center justify-center'>
+                    <div className='flex items-center justify-center pt-10 md:pt-0'>
                         <Controller
                             name='search'
                             control={control}

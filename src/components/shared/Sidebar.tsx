@@ -20,7 +20,7 @@ const Sidebar = () => {
     };
     return (
         <div className='md:hidden'>
-            <button className='px-3 py-2 rounded-md' onClick={() => setIsOpen(true)}>
+            <button className='px-3 py-2 rounded-md' onClick={() => toggleSidebar(true)}>
                 <FaBarsStaggered />
             </button>
             <div
@@ -32,13 +32,13 @@ const Sidebar = () => {
             <div className={`fixed top-0 left-0 h-screen w-60 bg-primary z-50 transform delay ${isOpen ? 'translate-x-0' : '-translate-x-full'} z-10 flex flex-col`}>
                 <div className='flex justify-between p-4 border-b'>
                     <Logo />
-                    <button className='px-3 py-2 rounded-md' onClick={() => setIsOpen(false)}>
+                    <button className='px-3 py-2 rounded-md' onClick={() => toggleSidebar(false)}>
                         <FaTimes />
                     </button>
                 </div>
                 <div className='flex flex-col grow'>
                     {navLinks.map((link, index) => (
-                        <ActiveLink key={index} href={link.href} className='py-4 text-base hover:bg-secondary px-4 font-semibold text-white '>
+                        <ActiveLink key={index} href={link.href} onClick={() => toggleSidebar(false)} className='py-4 text-base hover:bg-secondary px-4 font-semibold text-white '>
                             {link.title}
                         </ActiveLink>
                     ))}
