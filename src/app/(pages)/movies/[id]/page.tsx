@@ -9,6 +9,7 @@ import { Movie } from '@/types/Movie';
 import Image from 'next/image';
 import CastCard from '@/components/movie/CastCard';
 import { Metadata, ResolvingMetadata } from 'next';
+import AddToWatchlistButton from '@/components/small-ui/AddToWatchlistButton';
 interface MovieDetailsPageProps {
     params: { id: Promise<{ id: string }> };
 }
@@ -89,7 +90,10 @@ const MovieDetailsPage = async (props: { params: Params }) => {
                                 <div>
                                     <SubHeading>Overview</SubHeading>
                                     <div className='mt-6'>
-                                        <h1 className='text-3xl font-bold'>{movie.title}</h1>
+                                        <div className='flex flex-row gap-2'>
+                                            <h1 className='text-3xl font-bold grow'>{movie.title}</h1>
+                                            <AddToWatchlistButton movie={movie} />
+                                        </div>
                                         <p className='text-sm text-gray-400'>{movie.release_date}</p>
                                         <p className='mt-4 text-lg'>{movie.overview}</p>
                                         <p className='mt-2 text-sm text-yellow-500'>
@@ -115,7 +119,7 @@ const MovieDetailsPage = async (props: { params: Params }) => {
                                 <hr className='border-color/30 my-10' />
                                 <div className='mb-10'>
                                     <SubHeading>Casts of the Movie</SubHeading>
-                                    <div className='flex space-x-4 flex-wrap justify-center gap-4 py-4'>
+                                    <div className='flex flex-wrap justify-center gap-4 py-4'>
                                         {cast.map((member) => (
                                             <CastCard member={member} key={member.id} />
                                         ))}
