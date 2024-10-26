@@ -10,7 +10,7 @@ import { navLinks } from '@/constants/routes';
 import { isBrowser } from '@/constants/browser';
 
 const Sidebar = () => {
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
     const { theme } = useTheme();
     const toggleSidebar = (val: boolean) => {
         setIsOpen(val);
